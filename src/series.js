@@ -20,7 +20,7 @@ export class Series {
         for (let i = 0, l = points.length; i < l; i++) {
             const point = points[i]
             const xCoord = box.x + xAxis.valToPos(point.x) * box.width
-            const yCoord = box.y + yAxis.valToPos(point.y) * box.height
+            const yCoord = box.y + (1 - yAxis.valToPos(point.y)) * box.height
             steps.push((i === 0 ? 'M' : 'L') + xCoord + ' ' + yCoord)
         }
 

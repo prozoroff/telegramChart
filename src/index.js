@@ -1,6 +1,12 @@
 import { svg } from './renderer'
 import { Series } from './series'
-import { Axis } from './axis'
+import { AxisX } from './axes/xAxis'
+import { AxisY } from './axes/yAxis'
+import { padBox } from './utils'
+
+const defaults = {
+    padding: 5
+}
 
 class Chart {
     constructor (parent, config) {
@@ -20,8 +26,8 @@ class Chart {
                 config.colors[key]
             )
         })
-        this.xAxis = new Axis(this, 'x', xRange)
-        this.yAxis = new Axis(this, 'y', yRange)
+        this.xAxis = new AxisX(this, 'x', xRange)
+        this.yAxis = new AxisY(this, 'y', yRange)
 
         this.box = {
             x: 0,
@@ -37,12 +43,16 @@ class Chart {
             height: this.box.height
         })
         this.parent.appendChild(this.svg)
+        const box = padBox(this.box, defaults.padding)
 
-        const box = Object.assign(this.box)
+        // rendering y axis
+        const yAxisEl = this.yAxis.render(box)
 
+        // rendering x axis
         const xAxisEl = this.xAxis.render(box)
         box.height -= xAxisEl.getBBox().height
 
+        // rendering series
         this.series.map(s => s.render(box))
     }
 }

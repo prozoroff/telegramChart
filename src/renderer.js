@@ -22,6 +22,10 @@ export const g = attrs => create(
     'g', attrs
 )
 
+export const rect = attrs => create(
+    'rect', attrs
+)
+
 export const text = (value, attrs) => {
     const el = create('text', attrs)
     el.innerHTML = value
