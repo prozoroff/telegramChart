@@ -1,33 +1,42 @@
 
 const xmlns = 'http://www.w3.org/2000/svg'
-const create = (tag, attrs) => {
-    const el = document.createElementNS(xmlns, tag)
-    if (attrs) {
-        for (let key in attrs) {
-            el.setAttribute(key, attrs[key])
-        }
+
+export class Renderer {
+    constructor (parent, attrs) {
+        this.parent = parent
+        this.svgEl = this.svg(attrs)
     }
-    return el
-}
 
-export const svg = attrs => create(
-    'svg', attrs
-)
+    create (tag, attrs, parent) {
+        const el = document.createElementNS(xmlns, tag)
+        if (attrs) {
+            for (let key in attrs) {
+                el.setAttribute(key, attrs[key])
+            }
+        }
+        (parent || this.svgEl || this.parent).appendChild(el)
+        return el
+    }
 
-export const path = attrs => create(
-    'path', attrs
-)
+    svg (attrs, parent) {
+        return this.create('svg', attrs, parent)
+    }
 
-export const g = attrs => create(
-    'g', attrs
-)
+    path (attrs, parent) {
+        return this.create('path', attrs, parent)
+    }
 
-export const rect = attrs => create(
-    'rect', attrs
-)
+    g (attrs, parent) {
+        return this.create('g', attrs, parent)
+    }
 
-export const text = (value, attrs) => {
-    const el = create('text', attrs)
-    el.innerHTML = value
-    return el
+    rect (attrs, parent) {
+        return this.create('rect', attrs, parent)
+    }
+
+    text (value, attrs, parent) {
+        const el = this.create('text', attrs, parent)
+        el.innerHTML = value
+        return el
+    }
 }

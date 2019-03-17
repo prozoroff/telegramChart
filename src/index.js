@@ -1,68 +1,55 @@
-import { svg } from './renderer'
-import { Series } from './series'
-import { AxisX } from './axes/xAxis'
-import { AxisY } from './axes/yAxis'
-import { padBox } from './utils'
+import { Chart } from './chart'
+import { Renderer } from './renderer'
+import { extendCopy } from './utils'
 
-const defaults = {
-    padding: 5
-}
-
-class Chart {
+class tgChart {
     constructor (parent, config) {
         this.parent = parent
-        const xPoints = config.columns[0].slice(1)
-        const xRange = { min: xPoints[0], max: xPoints[xPoints.length - 1] }
-        const yRange = { min: Infinity, max: -Infinity }
-        this.series = config.columns.slice(1).map(obj => {
-            const key = obj[0]
-            const yPoints = obj.slice(1)
-            setRange(yPoints, yRange)
-            return new Series(
-                this,
-                xPoints,
-                yPoints,
-                config.names[key],
-                config.colors[key]
-            )
+        this.config = config
+        this.width = 600
+        this.height = 400
+        this.navigatorHeight = 80
+        this.renderer = new Renderer(this.parent, {
+            width: this.width,
+            height: this.height,
+            'font-family': 'Avenir',
+            'font-size': '14px'
         })
-        this.xAxis = new AxisX(this, 'x', xRange)
-        this.yAxis = new AxisY(this, 'y', yRange)
-
-        this.box = {
-            x: 0,
-            y: 0,
-            width: 600,
-            height: 300
-        }
     }
 
     render () {
-        this.svg = svg({
-            width: this.box.width,
-            height: this.box.height
+        // main chart
+        this.chart = new Chart(this.renderer, extendCopy(
+            this.config,
+            {
+                strokeWidth: 2
+            })
+        )
+
+        this.chart.render({
+            x: 0,
+            y: 0,
+            width: this.width,
+            height: this.height - this.navigatorHeight
         })
-        this.parent.appendChild(this.svg)
-        const box = padBox(this.box, defaults.padding)
 
-        // rendering y axis
-        const yAxisEl = this.yAxis.render(box)
+        // navigator chart
+        this.navigator = new Chart(this.renderer, extendCopy(
+            this.config,
+            {
+                strokeWidth: 1,
+                xAxisHidden: true,
+                yAxisHidden: true
+            })
+        )
 
-        // rendering x axis
-        const xAxisEl = this.xAxis.render(box)
-        box.height -= xAxisEl.getBBox().height
-
-        // rendering series
-        this.series.map(s => s.render(box))
+        this.navigator.render({
+            x: 0,
+            y: this.height - this.navigatorHeight,
+            width: this.width,
+            height: this.navigatorHeight
+        })
     }
 }
 
-function setRange (array, range) {
-    for (let i = 0, l = array.length; i < l; i++) {
-        const val = array[i]
-        val < range.min && (range.min = val)
-        val > range.max && (range.max = val)
-    }
-}
-
-window.tgc = { Chart }
+window.tgc = { Chart: tgChart }

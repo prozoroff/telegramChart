@@ -1,39 +1,40 @@
-import { text, rect } from '../renderer'
 import { shortMonths } from '../constants'
 import { Axis, defaults } from './axis'
 
 export class AxisX extends Axis {
     renderTicks (box) {
+        if (this.isHidden) return
+
         const ticksGroup = this.getGroup()
         const metrics = this.tickMetrics(0)
 
         // adding background rect
         const axisHeight = AxisX.getSize(metrics)
-        ticksGroup.appendChild(rect({
+        this.chart.renderer.rect({
             x: box.x,
             y: box.y + box.height - axisHeight,
             height: axisHeight,
             width: box.width,
             fill: 'none'
-        }))
+        }, ticksGroup)
 
         // adding ticks
         const ticksNumber = 1 + Math.floor(box.width / (2 * metrics.width))
         const posStep = 1 / ticksNumber
         const widthStep = box.width / ticksNumber
         for (let i = 0; i < ticksNumber; i++) {
-            const tick = text(
+            const tick = this.chart.renderer.text(
                 this.valToText(this.posToVal(posStep * i)),
                 {
                     x: box.x + widthStep * i + metrics.width / 2,
                     y: box.y + box.height - metrics.descent - defaults.padding
-                }
+                },
+                ticksGroup
             )
             this.ticks.push(tick)
             ticksGroup.appendChild(tick)
         }
 
-        this.chart.svg.appendChild(ticksGroup)
         return ticksGroup
     }
 

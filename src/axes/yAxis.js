@@ -1,4 +1,3 @@
-import { text, path, rect } from '../renderer'
 import { Axis, defaults } from './axis'
 import { AxisX } from './xAxis'
 
@@ -8,6 +7,8 @@ export class AxisY extends Axis {
     }
 
     renderTicks (box) {
+        if (this.isHidden) return
+
         const ticksGroup = this.getGroup()
         const metrics = this.tickMetrics(1)
         const xAxisHeight = AxisX.getSize(metrics)
@@ -15,33 +16,33 @@ export class AxisY extends Axis {
 
         // adding background rect
         const axisWidth = defaults.padding * 2 + metrics.width
-        ticksGroup.appendChild(rect({
+        this.chart.renderer.rect({
             x: box.x,
             y: 0,
             height: box.height,
             width: axisWidth,
             fill: 'none'
-        }))
+        }, ticksGroup)
 
         // adding ticks
         const ticksNumber = 6 // predefined
         const posStep = 1 / ticksNumber
         const heightStep = yAxisHeight / ticksNumber
         for (let i = 0; i < ticksNumber; i++) {
-            const tick = text(
+            const tick = this.chart.renderer.text(
                 this.valToText(this.posToVal(posStep * i)),
                 {
                     x: box.x + defaults.padding,
                     y: box.y + yAxisHeight - heightStep * i - metrics.descent
-                }
+                },
+                ticksGroup
             )
             this.ticks.push(tick)
-            ticksGroup.appendChild(tick)
         }
 
         // adding grid lines
         for (let i = 0; i < ticksNumber; i++) {
-            const tickLine = path(
+            const tickLine = this.chart.renderer.path(
                 {
                     d: 'M' + box.x + ' ' + (box.y + yAxisHeight - heightStep * i) + ' h' + box.width,
                     fill: 'none',
@@ -49,10 +50,8 @@ export class AxisY extends Axis {
                 }
             )
             this.ticksLines.push(tickLine)
-            ticksGroup.appendChild(tickLine)
         }
 
-        this.chart.svg.appendChild(ticksGroup)
         return ticksGroup
     }
 

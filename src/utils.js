@@ -6,3 +6,14 @@ export const padBox = (box, padding) => {
         height: box.height - padding * 2
     }
 }
+
+export const extend = (dest, src) => {
+    for (let key in src) {
+        !dest[key] && (dest[key] = src[key])
+    }
+    return dest
+}
+
+export const extendCopy = (dest, src) => {
+    return extend(extend({}, dest), src)
+}

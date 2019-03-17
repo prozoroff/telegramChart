@@ -1,6 +1,4 @@
 
-import { text, g } from '../renderer'
-
 export const defaults = {
     padding: 5,
     lineColor: 'lightgray',
@@ -8,10 +6,11 @@ export const defaults = {
 }
 
 export class Axis {
-    constructor (chart, type, range) {
+    constructor (chart, type, range, isHidden) {
         this.chart = chart
         this.type = type
         this.range = range
+        this.isHidden = isHidden
         this.ticks = []
         this.ticksLines = []
         this.init()
@@ -34,20 +33,19 @@ export class Axis {
     }
 
     getGroup () {
-        return g({
+        return this.chart.renderer.g({
             fill: defaults.tickLabelColor
         })
     }
 
     tickMetrics (pos) {
-        const firstTick = text(
+        const firstTick = this.chart.renderer.text(
             this.valToText(this.posToVal(pos)),
             {
                 x: 0,
                 y: 0
             }
         )
-        this.chart.svg.appendChild(firstTick)
         const bbox = firstTick.getBBox()
         firstTick.parentNode.removeChild(firstTick)
         return {

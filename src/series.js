@@ -1,14 +1,13 @@
-import { path } from './renderer'
 
 export class Series {
-    constructor (chart, xPoints, yPoints, name, color) {
+    constructor (chart, xPoints, yPoints, attrs) {
+        this.chart = chart
         this.points = []
         for (let i = 0, l = xPoints.length; i < l; i++) {
             this.points.push({ x: xPoints[i], y: yPoints[i] })
         }
         this.name = name
-        this.color = color
-        this.chart = chart
+        this.attrs = attrs
     }
 
     render (box) {
@@ -24,12 +23,12 @@ export class Series {
             steps.push((i === 0 ? 'M' : 'L') + xCoord + ' ' + yCoord)
         }
 
-        const seriesPath = path({
+        const seriesPath = this.chart.renderer.path({
             d: steps.join(' '),
-            stroke: this.color,
+            stroke: this.attrs.color,
+            'stroke-width': this.attrs.strokeWidth,
             fill: 'none'
         })
-        this.chart.svg.appendChild(seriesPath)
 
         return seriesPath
     }
