@@ -17,3 +17,13 @@ export const svg = attrs => create(
 export const path = attrs => create(
     'path', attrs
 )
+
+export const g = attrs => create(
+    'g', attrs
+)
+
+export const text = (value, attrs) => {
+    const el = create('text', attrs)
+    el.innerHTML = value
+    return el
+}

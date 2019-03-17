@@ -30,5 +30,7 @@ export class Series {
             fill: 'none'
         })
         this.chart.svg.appendChild(seriesPath)
+
+        return seriesPath
     }
 }
