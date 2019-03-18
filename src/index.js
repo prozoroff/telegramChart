@@ -1,6 +1,7 @@
 import { Chart } from './chart'
 import { Renderer } from './renderer'
 import { extendCopy } from './utils'
+import { Navigator } from './navigator'
 
 class tgChart {
     constructor (parent, config) {
@@ -15,33 +16,23 @@ class tgChart {
             'font-family': 'Avenir',
             'font-size': '14px'
         })
+        this.chart = new Chart(
+            this.renderer,
+            extendCopy(this.config, { strokeWidth: 2 })
+        )
+        this.navigator = new Navigator(
+            this.renderer,
+            extendCopy(this.config, { strokeWidth: 1, xAxisHidden: true, yAxisHidden: true })
+        )
     }
 
     render () {
-        // main chart
-        this.chart = new Chart(this.renderer, extendCopy(
-            this.config,
-            {
-                strokeWidth: 2
-            })
-        )
-
         this.chart.render({
             x: 0,
             y: 0,
             width: this.width,
             height: this.height - this.navigatorHeight
         })
-
-        // navigator chart
-        this.navigator = new Chart(this.renderer, extendCopy(
-            this.config,
-            {
-                strokeWidth: 1,
-                xAxisHidden: true,
-                yAxisHidden: true
-            })
-        )
 
         this.navigator.render({
             x: 0,

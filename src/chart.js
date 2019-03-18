@@ -36,7 +36,7 @@ export class Chart {
         const chartBox = padBox(box, defaults.padding)
 
         // rendering y axis
-        const yAxisEl = this.yAxis.render(chartBox)
+        this.yAxis.render(chartBox)
 
         // rendering x axis
         const xAxisEl = this.xAxis.render(chartBox)
