@@ -16,9 +16,10 @@ const controlWidth = 8
 const minRangePx = 50
 
 export class Navigator {
-    constructor (renderer, config) {
+    constructor (renderer, config, onRange) {
         this.renderer = renderer
         this.chart = new Chart(renderer, config)
+        this.onRange = onRange
     }
 
     render (box) {
@@ -103,6 +104,11 @@ export class Navigator {
         } else {
             me.centralStripe.setAttribute('d', me.getD(coords))
         }
+
+        this.onRange({
+            min: me.chart.xAxis.posToVal(me.leftX / me.box.width),
+            max: me.chart.xAxis.posToVal(me.rightX / me.box.width)
+        })
     }
 
     setLeft (x) {

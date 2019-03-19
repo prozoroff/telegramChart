@@ -16,7 +16,7 @@ export class Chart {
         this.series = config.columns.slice(1).map(obj => {
             const key = obj[0]
             const yPoints = obj.slice(1)
-            setRange(yPoints, yRange)
+            fullRange(yPoints, yRange)
             return new Series(
                 this,
                 xPoints,
@@ -45,9 +45,13 @@ export class Chart {
         // rendering series
         this.series.map(s => s.render(chartBox))
     }
+
+    setRange (range) {
+        
+    }
 }
 
-function setRange (array, range) {
+function fullRange (array, range) {
     for (let i = 0, l = array.length; i < l; i++) {
         const val = array[i]
         val < range.min && (range.min = val)

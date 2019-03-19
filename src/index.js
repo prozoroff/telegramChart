@@ -16,13 +16,18 @@ class tgChart {
             'font-family': 'Avenir',
             'font-size': '14px'
         })
+
         this.chart = new Chart(
             this.renderer,
             extendCopy(this.config, { strokeWidth: 2 })
         )
+
         this.navigator = new Navigator(
             this.renderer,
-            extendCopy(this.config, { strokeWidth: 1, xAxisHidden: true, yAxisHidden: true })
+            extendCopy(this.config, { strokeWidth: 1, xAxisHidden: true, yAxisHidden: true }),
+            range => {
+                this.chart.setRange(range)
+            }
         )
     }
 
