@@ -18,8 +18,8 @@ export const extendCopy = (dest, src) => {
     return extend(extend({}, dest), src)
 }
 
-export const snap = (val, globalVal, offset) => {
-    let snapOffset = offset - (globalVal + val) % 1;
-    Math.abs(snapOffset) > 0.5 && (snapOffset -= snapOffset > 0 ? 1 : -1);
-    return val + snapOffset;
-};
+export const snap = (val, offset) => {
+    let snapOffset = (offset || 0) - val % 1
+    Math.abs(snapOffset) > 0.5 && (snapOffset -= snapOffset > 0 ? 1 : -1)
+    return val + snapOffset
+}

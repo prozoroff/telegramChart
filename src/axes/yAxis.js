@@ -1,5 +1,6 @@
 import { Axis, defaults } from './axis'
 import { AxisX } from './xAxis'
+import { snap } from '../utils'
 
 export class AxisY extends Axis {
     init () {
@@ -42,9 +43,10 @@ export class AxisY extends Axis {
 
         // adding grid lines
         for (let i = 0; i < ticksNumber; i++) {
+            const yCoord = snap(box.y + yAxisHeight - heightStep * i, 0.5)
             const tickLine = this.chart.renderer.path(
                 {
-                    d: 'M' + box.x + ' ' + (box.y + yAxisHeight - heightStep * i) + ' h' + box.width,
+                    d: 'M' + box.x + ' ' + yCoord + ' h' + box.width,
                     fill: 'none',
                     stroke: defaults.lineColor
                 }
