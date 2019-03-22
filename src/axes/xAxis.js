@@ -19,7 +19,7 @@ export class AxisX extends Axis {
         }, ticksGroup)
 
         // adding ticks
-        const ticksNumber = 1 + Math.floor(box.width / (2 * metrics.width))
+        const ticksNumber = Math.min(6, 1 + Math.floor(box.width / (2 * metrics.width)))
         const posStep = 1 / ticksNumber
         const widthStep = box.width / ticksNumber
         for (let i = 0; i < ticksNumber; i++) {
@@ -40,7 +40,7 @@ export class AxisX extends Axis {
 
     valToText (val) {
         const date = new Date(val)
-        return shortMonths[date.getMonth()] + ' ' + date.getDay()
+        return shortMonths[date.getMonth()] + ' ' + (date.getDay() + 1)
     }
 
     static getSize (metrics) {

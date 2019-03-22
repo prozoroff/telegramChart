@@ -5,6 +5,11 @@ export class Renderer {
     constructor (parent, attrs) {
         this.parent = parent
         this.svgEl = this.svg(attrs)
+        this.background = this.rect({
+            width: attrs.width,
+            height: attrs.height,
+            fill: 'transparent'
+        })
     }
 
     create (tag, attrs, parent) {

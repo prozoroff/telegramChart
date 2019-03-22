@@ -12,7 +12,8 @@ const snapBox = (box, offset) => {
     }
 }
 
-const controlWidth = 8
+const controlWidth = 4
+const activeWidth = 16
 const minRangePx = 50
 
 export class Navigator {
@@ -28,9 +29,12 @@ export class Navigator {
         me.chart.render(box)
         me.box = box
 
-        me.setLeft(box.width * 0.5)
-        me.setRight(box.width * 0.7)
+        const leftX = this.leftX = box.width * 0.5
+        const rightX = this.rightX = box.width * 0.7
+
         me.setCentral()
+        me.setLeft(leftX)
+        me.setRight(rightX)
 
         const leftMoveHandler = event => {
             const dx = event.clientX - leftMoveHandler.x
@@ -60,25 +64,33 @@ export class Navigator {
             }
         }
 
-        this.leftControl.addEventListener('mousedown', event => {
+        const svgEl = me.renderer.svgEl
+
+        this.leftActive.addEventListener('mousedown', event => {
             leftMoveHandler.x = event.clientX
-            me.renderer.svgEl.addEventListener('mousemove', leftMoveHandler)
+            svgEl.addEventListener('mousemove', leftMoveHandler)
         })
 
-        this.rightControl.addEventListener('mousedown', event => {
+        this.rightActive.addEventListener('mousedown', event => {
             rightMoveHandler.x = event.clientX
-            me.renderer.svgEl.addEventListener('mousemove', rightMoveHandler)
+            svgEl.addEventListener('mousemove', rightMoveHandler)
         })
 
         this.centralStripe.addEventListener('mousedown', event => {
             centralMoveHandler.x = event.clientX
-            me.renderer.svgEl.addEventListener('mousemove', centralMoveHandler)
+            svgEl.addEventListener('mousemove', centralMoveHandler)
         })
 
         this.renderer.svgEl.addEventListener('mouseup', () => {
-            me.renderer.svgEl.removeEventListener('mousemove', leftMoveHandler)
-            me.renderer.svgEl.removeEventListener('mousemove', rightMoveHandler)
-            me.renderer.svgEl.removeEventListener('mousemove', centralMoveHandler)
+            svgEl.removeEventListener('mousemove', leftMoveHandler)
+            svgEl.removeEventListener('mousemove', rightMoveHandler)
+            svgEl.removeEventListener('mousemove', centralMoveHandler)
+        })
+
+        this.renderer.svgEl.addEventListener('mouseleave', (event) => {
+            svgEl.removeEventListener('mousemove', leftMoveHandler)
+            svgEl.removeEventListener('mousemove', rightMoveHandler)
+            svgEl.removeEventListener('mousemove', centralMoveHandler)
         })
     }
 
@@ -123,19 +135,17 @@ export class Navigator {
             height: box.height
         })
 
-        const coordsControl = snapBox({
-            x: box.x + x - controlWidth / 2,
-            y: box.y,
-            width: controlWidth,
-            height: box.height
-        })
+        const coordsControl = snapBox(me.controlCoords(controlWidth, x));
+        const coordsActive = snapBox(me.controlCoords(activeWidth, x));
 
         if (!me.leftStripe) {
             me.leftStripe = me.sideStripe(coords)
             me.leftControl = me.sideControl(coordsControl)
+            me.leftActive = me.sideActive(coordsActive)
         } else {
             me.leftStripe.setAttribute('d', me.getD(coords))
             me.leftControl.setAttribute('d', me.getD(coordsControl))
+            me.leftActive.setAttribute('d', me.getD(coordsActive))
         }
     }
 
@@ -151,19 +161,17 @@ export class Navigator {
             height: box.height
         })
 
-        const coordsControl = snapBox({
-            x: x - controlWidth / 2,
-            y: box.y,
-            width: controlWidth,
-            height: box.height
-        })
+        const coordsControl = snapBox(me.controlCoords(controlWidth, x));
+        const coordsActive = snapBox(me.controlCoords(activeWidth, x));
 
         if (!me.rightStripe) {
             me.rightStripe = me.sideStripe(coords)
             me.rightControl = me.sideControl(coordsControl)
+            me.rightActive = me.sideActive(coordsActive)
         } else {
             me.rightStripe.setAttribute('d', me.getD(coords))
             me.rightControl.setAttribute('d', me.getD(coordsControl))
+            me.rightActive.setAttribute('d', me.getD(coordsActive))
         }
     }
 
@@ -189,8 +197,24 @@ export class Navigator {
     sideControl (coords) {
         return this.renderer.path({
             d: this.getD(coords),
-            fill: 'lightgray',
+            fill: 'lightgray'
+        })
+    }
+
+    sideActive (coords) {
+        return this.renderer.path({
+            d: this.getD(coords),
+            fill: 'transparent',
             cursor: 'pointer'
         })
+    }
+
+    controlCoords (controlWidth, x) {
+        return {
+            x: x - controlWidth / 2,
+            y: this.box.y,
+            width: controlWidth,
+            height: this.box.height
+        }
     }
 }
