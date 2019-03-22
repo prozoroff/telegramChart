@@ -48,11 +48,10 @@ export class Series {
     }
 
     scalePathY (yRange) {
-
         const scaleY = 1 / (yRange.max - yRange.min)
         this.scale[1] = scaleY
 
-        const translateY = -(this.box.height * ( 1 - yRange.max))
+        const translateY = -(this.box.height * (1 - yRange.max))
         this.translate[1] = translateY
 
         this.setTransform()
@@ -65,19 +64,18 @@ export class Series {
         this.path.setAttribute('transform', scaleStr + ' ' + translateStr)
     }
 
-    getYRange(xRange) {
+    getYRange (xRange) {
         const points = this.points
         const yRange = { min: Infinity, max: -Infinity }
 
-        for( let i = 0, l = points.length; i < l; i++ ) {
-            const point = points[i];
-            if(point.x > xRange.min && point.x < xRange.max){
-                const yVal = point.y;
+        for (let i = 0, l = points.length; i < l; i++) {
+            const point = points[i]
+            if (point.x > xRange.min && point.x < xRange.max) {
+                const yVal = point.y
                 yVal < yRange.min && (yRange.min = yVal)
                 yVal > yRange.max && (yRange.max = yVal)
             }
         }
-
         return yRange
     }
 }

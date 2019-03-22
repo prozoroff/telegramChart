@@ -1,7 +1,7 @@
 import { Series } from './series'
 import { AxisX } from './axes/xAxis'
 import { AxisY } from './axes/yAxis'
-import { padBox } from './utils'
+import { padBox, throttle } from './utils'
 
 const defaults = {
     padding: 5
@@ -30,6 +30,11 @@ export class Chart {
         })
         this.xAxis = new AxisX(this, 'x', xRange, config.xAxisHidden)
         this.yAxis = new AxisY(this, 'y', yRange, config.yAxisHidden)
+        this.setRangeY = throttle(yRange => {
+            this.series.map(ser => {
+                ser.scalePathY(yRange)
+            })
+        }, 500)
     }
 
     render (box) {
@@ -47,7 +52,6 @@ export class Chart {
     }
 
     setRange (xRange) {
-
         const yRangeVal = { min: Infinity, max: -Infinity }
 
         this.series.map(ser => {
@@ -59,14 +63,13 @@ export class Chart {
             yRangeVal.max < yRangeSer.max && (yRangeVal.max = yRangeSer.max)
         })
 
-        const yRange = {
-            min: this.yAxis.valToPos(0),
-            max: this.yAxis.valToPos(yRangeVal.max)
-        }
-
         this.series.map(ser => {
             ser.scalePathX(xRange)
-            ser.scalePathY(yRange)
+        })
+
+        this.setRangeY({
+            min: this.yAxis.valToPos(0),
+            max: this.yAxis.valToPos(yRangeVal.max)
         })
     }
 }
