@@ -46,9 +46,27 @@ export class Chart {
         this.series.map(s => s.render(chartBox))
     }
 
-    setRange (range) {
+    setRange (xRange) {
+
+        const yRangeVal = { min: Infinity, max: -Infinity }
+
         this.series.map(ser => {
-            ser.scalePath(range)
+            const yRangeSer = ser.getYRange({
+                min: this.xAxis.posToVal(xRange.min),
+                max: this.xAxis.posToVal(xRange.max)
+            })
+            yRangeVal.min > yRangeSer.min && (yRangeVal.min = yRangeSer.min)
+            yRangeVal.max < yRangeSer.max && (yRangeVal.max = yRangeSer.max)
+        })
+
+        const yRange = {
+            min: this.yAxis.valToPos(0),
+            max: this.yAxis.valToPos(yRangeVal.max)
+        }
+
+        this.series.map(ser => {
+            ser.scalePathX(xRange)
+            ser.scalePathY(yRange)
         })
     }
 }

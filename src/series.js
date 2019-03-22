@@ -37,16 +37,47 @@ export class Series {
         return this.path
     }
 
-    scalePath (range) {
-        const scaleX = 1 / (range.max - range.min)
-        this.scale = [scaleX, 1]
+    scalePathX (xRange) {
+        const scaleX = 1 / (xRange.max - xRange.min)
+        this.scale[0] = scaleX
 
-        const translateX = -(this.box.width * range.min)
-        this.translate = [translateX, 0]
+        const translateX = -(this.box.width * xRange.min)
+        this.translate[0] = translateX
 
+        this.setTransform()
+    }
+
+    scalePathY (yRange) {
+
+        const scaleY = 1 / (yRange.max - yRange.min)
+        this.scale[1] = scaleY
+
+        const translateY = -(this.box.height * ( 1 - yRange.max))
+        this.translate[1] = translateY
+
+        this.setTransform()
+    }
+
+    setTransform () {
         const scaleStr = 'scale(' + this.scale.join(' ') + ')'
         const translateStr = 'translate(' + this.translate.join(' ') + ')'
 
         this.path.setAttribute('transform', scaleStr + ' ' + translateStr)
+    }
+
+    getYRange(xRange) {
+        const points = this.points
+        const yRange = { min: Infinity, max: -Infinity }
+
+        for( let i = 0, l = points.length; i < l; i++ ) {
+            const point = points[i];
+            if(point.x > xRange.min && point.x < xRange.max){
+                const yVal = point.y;
+                yVal < yRange.min && (yRange.min = yVal)
+                yVal > yRange.max && (yRange.max = yVal)
+            }
+        }
+
+        return yRange
     }
 }
