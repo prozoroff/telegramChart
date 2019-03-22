@@ -106,8 +106,8 @@ export class Navigator {
         }
 
         this.onRange({
-            min: me.chart.xAxis.posToVal(me.leftX / me.box.width),
-            max: me.chart.xAxis.posToVal(me.rightX / me.box.width)
+            min: me.leftX / me.box.width,
+            max: me.rightX / me.box.width
         })
     }
 

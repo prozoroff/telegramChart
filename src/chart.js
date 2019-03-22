@@ -47,7 +47,9 @@ export class Chart {
     }
 
     setRange (range) {
-        
+        this.series.map(ser => {
+            ser.scalePath(range)
+        })
     }
 }
 
