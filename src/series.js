@@ -1,3 +1,4 @@
+import { animate } from './animation'
 
 export class Series {
     constructor (chart, xPoints, yPoints, attrs) {
@@ -31,7 +32,8 @@ export class Series {
             stroke: this.attrs.color,
             'stroke-width': this.attrs.strokeWidth,
             'vector-effect': 'non-scaling-stroke',
-            fill: 'none'
+            fill: 'none',
+            transition: 'all 0.5s'
         })
 
         return this.path
@@ -49,12 +51,12 @@ export class Series {
 
     scalePathY (yRange) {
         const scaleY = 1 / (yRange.max - yRange.min)
-        this.scale[1] = scaleY
-
         const translateY = -(this.box.height * (1 - yRange.max))
-        this.translate[1] = translateY
 
-        this.setTransform()
+        this.cancelAnimation && this.cancelAnimation()
+        this.cancelAnimation = animate(this, translateY, scaleY)
+
+        // this.setTransform()
     }
 
     setTransform () {

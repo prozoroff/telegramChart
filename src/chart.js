@@ -34,7 +34,7 @@ export class Chart {
             this.series.map(ser => {
                 ser.scalePathY(yRange)
             })
-        }, 500)
+        }, 300)
     }
 
     render (box) {
