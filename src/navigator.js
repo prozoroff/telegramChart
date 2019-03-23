@@ -12,7 +12,8 @@ const snapBox = (box, offset) => {
     }
 }
 
-const controlWidth = 4
+const controlWidth = 6
+const controlBorder = 2
 const activeWidth = 16
 const minRangePx = 50
 
@@ -102,19 +103,44 @@ export class Navigator {
             x: me.leftX,
             y: box.y,
             width: me.rightX - me.leftX,
-            height: box.height - 1
-        }, 0.5)
+            height: box.height
+        }, 0)
 
         if (!me.centralStripe) {
             me.centralStripe = this.renderer.path({
                 d: me.getD(coords),
                 fill: 'transparent',
-                stroke: 'lightgray',
-                'stroke-width': 1,
+                stroke: 'none',
                 cursor: 'pointer'
             })
         } else {
             me.centralStripe.setAttribute('d', me.getD(coords))
+        }
+
+        const d = [
+            'M', coords.x, coords.y,
+            'h', coords.width,
+            'v', coords.height,
+            'h', '-' + coords.width,
+            'Z',
+            'M', coords.x + controlWidth, coords.y + controlBorder,
+            'h', coords.width - controlWidth * 2,
+            'v', coords.height - controlBorder * 2,
+            'h', '-' + (coords.width - controlWidth * 2),
+            'Z'
+        ].join(' ')
+
+        if (!me.centralBorder) {
+            me.centralBorder = this.renderer.path({
+                d,
+                fill: 'lightgray',
+                stroke: 'none',
+                cursor: 'pointer',
+                'fill-rule': 'evenodd',
+                opacity: 0.5
+            })
+        } else {
+            me.centralBorder.setAttribute('d', d)
         }
 
         this.onRange({
@@ -135,16 +161,13 @@ export class Navigator {
             height: box.height
         })
 
-        const coordsControl = snapBox(me.controlCoords(controlWidth, x));
-        const coordsActive = snapBox(me.controlCoords(activeWidth, x));
+        const coordsActive = snapBox(me.controlCoords(activeWidth, x))
 
         if (!me.leftStripe) {
             me.leftStripe = me.sideStripe(coords)
-            me.leftControl = me.sideControl(coordsControl)
             me.leftActive = me.sideActive(coordsActive)
         } else {
             me.leftStripe.setAttribute('d', me.getD(coords))
-            me.leftControl.setAttribute('d', me.getD(coordsControl))
             me.leftActive.setAttribute('d', me.getD(coordsActive))
         }
     }
@@ -161,16 +184,13 @@ export class Navigator {
             height: box.height
         })
 
-        const coordsControl = snapBox(me.controlCoords(controlWidth, x));
-        const coordsActive = snapBox(me.controlCoords(activeWidth, x));
+        const coordsActive = snapBox(me.controlCoords(activeWidth, x))
 
         if (!me.rightStripe) {
             me.rightStripe = me.sideStripe(coords)
-            me.rightControl = me.sideControl(coordsControl)
             me.rightActive = me.sideActive(coordsActive)
         } else {
             me.rightStripe.setAttribute('d', me.getD(coords))
-            me.rightControl.setAttribute('d', me.getD(coordsControl))
             me.rightActive.setAttribute('d', me.getD(coordsActive))
         }
     }
@@ -191,13 +211,6 @@ export class Navigator {
             fill: 'dodgerblue',
             opacity: 0.1,
             stroke: 'none'
-        })
-    }
-
-    sideControl (coords) {
-        return this.renderer.path({
-            d: this.getD(coords),
-            fill: 'lightgray'
         })
     }
 

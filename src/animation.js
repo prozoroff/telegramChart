@@ -56,8 +56,8 @@ export const animate = (series, toY, toScale) => {
     const fromScale = series.scale[1]
 
     const stepsCount = 20
-    const yAnim = easeOut(stepsCount, fromY, toY)
-    const scaleAnim = easeOut(stepsCount, fromScale, toScale)
+    const yAnim = easeIn(stepsCount, fromY, toY)
+    const scaleAnim = easeIn(stepsCount, fromScale, toScale)
 
     let stop
     const cancel = () => (stop = true)
