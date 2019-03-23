@@ -7,7 +7,8 @@ export class AxisY extends Axis {
         this.range.min = 0
     }
 
-    renderTicks (box) {
+    render (box) {
+        super.render(box)
         if (this.isHidden) return
 
         const ticksGroup = this.getGroup()

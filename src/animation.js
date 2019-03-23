@@ -51,13 +51,44 @@ const easeInOut = (stepsCount, from, to) => ({
     }
 })
 
-export const animate = (series, toY, toScale) => {
+export const animateXTicks = (groupOut, groupIn, move) => {
+    const stepsCount = 20
+
+    const xAnimIn = linear(stepsCount, -move, 0)
+    const xAnimOut = linear(stepsCount, 0, move)
+    const opacityAnimIn = linear(stepsCount, 0, 1)
+    const opacityAnimOut = linear(stepsCount, 1, 0)
+
+    const render = () => {
+        const xValIn = xAnimIn.val
+        const xValOut = xAnimOut.val
+        const opacityValIn = opacityAnimIn.val
+        const opacityValOut = opacityAnimOut.val
+
+        if (xValIn !== null) {
+            reqAnimFrame(render)
+            groupOut.setAttribute('transform', 'translate(' + xValOut + ',0)')
+            groupIn.setAttribute('transform', 'translate(' + xValIn + ',0)')
+            groupOut.setAttribute('opacity', opacityValOut)
+            groupIn.setAttribute('opacity', opacityValIn)
+        }
+
+        if (xValIn === null) {
+            groupOut.parentNode.removeChild(groupOut)
+            animateXTicks.busy = false
+        }
+    }
+    animateXTicks.busy = true
+    render()
+}
+
+export const animateSeries = (series, toY, toScale) => {
     const fromY = series.translate[1]
     const fromScale = series.scale[1]
 
     const stepsCount = 20
-    const yAnim = easeIn(stepsCount, fromY, toY)
-    const scaleAnim = easeIn(stepsCount, fromScale, toScale)
+    const yAnim = linear(stepsCount, fromY, toY)
+    const scaleAnim = linear(stepsCount, fromScale, toScale)
 
     let stop
     const cancel = () => (stop = true)

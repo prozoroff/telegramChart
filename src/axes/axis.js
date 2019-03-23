@@ -9,6 +9,7 @@ export class Axis {
     constructor (chart, type, range, isHidden) {
         this.chart = chart
         this.type = type
+        this.initialRange = range
         this.range = range
         this.isHidden = isHidden
         this.ticks = []
@@ -24,12 +25,43 @@ export class Axis {
     }
 
     posToVal (pos) {
-        const range = this.range
+        const range = this.initialRange
         return pos * (range.max - range.min) + range.min
     }
 
     render (box) {
-        return this.renderTicks(box)
+        this.box = {
+            x: box.x,
+            y: box.y,
+            width: box.width,
+            height: box.height
+        }
+    }
+
+    renderTicks () { }
+
+    setRange (range) {
+        const newRange = {
+            min: this.posToVal(range.min),
+            max: this.posToVal(range.max)
+        }
+
+        const dMin = newRange.min - this.range.min
+        const dMax = newRange.max - this.range.max
+
+        if (dMin !== 0 || dMax !== 0) {
+            this.direction = (dMin > 0 || dMax > 0) ? -1 : 1
+        } else {
+            this.direction = 0
+        }
+
+        this.range = newRange
+        this.renderTicks()
+    }
+
+    posToValCurrent (pos) {
+        const range = this.range
+        return pos * (range.max - range.min) + range.min
     }
 
     getGroup () {

@@ -1,4 +1,4 @@
-import { animate } from './animation'
+import { animateSeries } from './animation'
 
 export class Series {
     constructor (chart, xPoints, yPoints, attrs) {
@@ -54,7 +54,7 @@ export class Series {
         const translateY = -(this.box.height * (1 - yRange.max))
 
         this.cancelAnimation && this.cancelAnimation()
-        this.cancelAnimation = animate(this, translateY, scaleY)
+        this.cancelAnimation = animateSeries(this, translateY, scaleY)
 
         // this.setTransform()
     }

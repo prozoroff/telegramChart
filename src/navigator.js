@@ -30,8 +30,8 @@ export class Navigator {
         me.chart.render(box)
         me.box = box
 
-        const leftX = this.leftX = box.width * 0.5
-        const rightX = this.rightX = box.width * 0.7
+        const leftX = this.leftX = box.x + box.width * 0.5
+        const rightX = this.rightX = box.x + box.width * 0.7
 
         me.setCentral()
         me.setLeft(leftX)
@@ -144,8 +144,8 @@ export class Navigator {
         }
 
         this.onRange({
-            min: me.leftX / me.box.width,
-            max: me.rightX / me.box.width
+            min: (me.leftX - box.x) / box.width,
+            max: (me.rightX - box.x) / box.width
         })
     }
 

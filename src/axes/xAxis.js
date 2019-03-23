@@ -1,14 +1,39 @@
 import { shortMonths } from '../constants'
 import { Axis, defaults } from './axis'
+import { animateXTicks } from '../animation'
 
 export class AxisX extends Axis {
-    renderTicks (box) {
+    render (box) {
+        super.render(box)
         if (this.isHidden) return
+        const metrics = this.metrics = this.tickMetrics(0)
+        this.renderTicks(metrics)
+        return this.ticksGroup
+    }
 
-        const ticksGroup = this.getGroup()
-        const metrics = this.tickMetrics(0)
+    renderTicks () {
+        if (animateXTicks.busy) return
+        this.createNewTicks()
+        this.ticksGroupOut && animateXTicks(
+            this.ticksGroupOut,
+            this.ticksGroup,
+            this.ticksGap * this.direction)
+    }
 
-        // adding background rect
+    valToText (val) {
+        const date = new Date(val)
+        return shortMonths[date.getMonth()] + ' ' + date.getDate()
+    }
+
+    createNewTicks () {
+        const box = this.box
+        const metrics = this.metrics
+        const ticksNumber = Math.min(6, 1 + Math.floor(box.width / (2 * metrics.width)))
+        const posStep = 1 / ticksNumber
+        const widthStep = box.width / ticksNumber
+        this.ticksGroupOut = this.ticksGroup
+
+        const ticksGroup = this.ticksGroup = this.getGroup()
         const axisHeight = AxisX.getSize(metrics)
         this.chart.renderer.rect({
             x: box.x,
@@ -18,29 +43,22 @@ export class AxisX extends Axis {
             fill: 'none'
         }, ticksGroup)
 
-        // adding ticks
-        const ticksNumber = Math.min(6, 1 + Math.floor(box.width / (2 * metrics.width)))
-        const posStep = 1 / ticksNumber
-        const widthStep = box.width / ticksNumber
+        const yCoord = box.y + box.height - metrics.descent - defaults.padding
+
+        let ticksCount = 0
         for (let i = 0; i < ticksNumber; i++) {
-            const tick = this.chart.renderer.text(
-                this.valToText(this.posToVal(posStep * i)),
+            const value = this.posToValCurrent(posStep * i)
+            this.chart.renderer.text(
+                this.valToText(value),
                 {
                     x: box.x + widthStep * i + metrics.width / 2,
-                    y: box.y + box.height - metrics.descent - defaults.padding
+                    y: yCoord
                 },
                 ticksGroup
             )
-            this.ticks.push(tick)
-            ticksGroup.appendChild(tick)
+            ticksCount++
         }
-
-        return ticksGroup
-    }
-
-    valToText (val) {
-        const date = new Date(val)
-        return shortMonths[date.getMonth()] + ' ' + (date.getDay() + 1)
+        this.ticksGap = box.width / ticksCount
     }
 
     static getSize (metrics) {

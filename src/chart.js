@@ -71,6 +71,8 @@ export class Chart {
             min: this.yAxis.valToPos(0),
             max: this.yAxis.valToPos(yRangeVal.max)
         })
+
+        this.xAxis.setRange(xRange)
     }
 }
 
