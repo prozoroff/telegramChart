@@ -69,10 +69,32 @@ export class AxisY extends Axis {
             )
         }
 
-        this.ticksGap = box.height / ticksNumber
+        this.ticksGap = this.changeRatio * box.height / ticksNumber
     }
 
     valToText (val) {
         return Math.round(val).toString()
+    }
+
+    setRange (range) {
+        const newRange = {
+            min: this.posToVal(range.min),
+            max: this.posToVal(range.max)
+        }
+
+        const dMin = newRange.min - this.range.min
+        const dMax = newRange.max - this.range.max
+
+        const ratio = this.range.max / newRange.max
+        this.changeRatio = ratio > 1 ? ratio : (1 / ratio)
+
+        if (dMin !== 0 || dMax !== 0) {
+            this.direction = (dMin > 0 || dMax > 0) ? -1 : 1
+        } else {
+            this.direction = 0
+        }
+
+        this.range = newRange
+        this.renderTicks()
     }
 }

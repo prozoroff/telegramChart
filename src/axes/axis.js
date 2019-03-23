@@ -53,24 +53,7 @@ export class Axis {
 
     renderTicks () {}
 
-    setRange (range) {
-        const newRange = {
-            min: this.posToVal(range.min),
-            max: this.posToVal(range.max)
-        }
-
-        const dMin = newRange.min - this.range.min
-        const dMax = newRange.max - this.range.max
-
-        if (dMin !== 0 || dMax !== 0) {
-            this.direction = (dMin > 0 || dMax > 0) ? -1 : 1
-        } else {
-            this.direction = 0
-        }
-
-        this.range = newRange
-        this.renderTicks()
-    }
+    setRange (range) {}
 
     getGroup () {
         return this.chart.renderer.g({
