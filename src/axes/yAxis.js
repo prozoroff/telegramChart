@@ -1,18 +1,28 @@
 import { Axis, defaults } from './axis'
 import { AxisX } from './xAxis'
 import { snap } from '../utils'
+import { animateYTicks } from '../animation'
 
 export class AxisY extends Axis {
-    init () {
-        this.range.min = 0
+    renderTicks () {
+        // if (animateYTicks.busy) return
+        this.createNewTicks()
+        animateYTicks(
+            this.ticksGroupOut,
+            this.ticksGroup,
+            this.ticksGap * this.direction)
     }
 
-    render (box) {
-        super.render(box)
-        if (this.isHidden) return
+    getMetrics () {
+        return this.tickMetrics(1)
+    }
 
-        const ticksGroup = this.getGroup()
-        const metrics = this.tickMetrics(1)
+    createNewTicks () {
+        const box = this.box
+        const metrics = this.metrics
+        this.ticksGroupOut = this.ticksGroup
+
+        const ticksGroup = this.ticksGroup = this.getGroup()
         const xAxisHeight = AxisX.getSize(metrics)
         const yAxisHeight = box.height - xAxisHeight
 
@@ -31,31 +41,35 @@ export class AxisY extends Axis {
         const posStep = 1 / ticksNumber
         const heightStep = yAxisHeight / ticksNumber
         for (let i = 0; i < ticksNumber; i++) {
+            if (i === 0 && this.ticksGroupOut) continue
+            const value = this.posToValCurrent(posStep * i)
             const tick = this.chart.renderer.text(
-                this.valToText(this.posToVal(posStep * i)),
+                this.valToText(value),
                 {
                     x: box.x + defaults.padding,
-                    y: box.y + yAxisHeight - heightStep * i - metrics.descent
+                    y: box.y + yAxisHeight - heightStep * i - metrics.descent,
+                    fill: defaults.tickLabelColor
                 },
-                ticksGroup
+                i === 0 ? undefined : ticksGroup
             )
             this.ticks.push(tick)
         }
 
         // adding grid lines
         for (let i = 0; i < ticksNumber; i++) {
+            if (i === 0 && this.ticksGroupOut) continue
             const yCoord = snap(box.y + yAxisHeight - heightStep * i, 0.5)
-            const tickLine = this.chart.renderer.path(
+            this.chart.renderer.path(
                 {
                     d: 'M' + box.x + ' ' + yCoord + ' h' + box.width,
                     fill: 'none',
                     stroke: defaults.lineColor
-                }
+                },
+                i === 0 ? undefined : ticksGroup
             )
-            this.ticksLines.push(tickLine)
         }
 
-        return ticksGroup
+        this.ticksGap = box.height / ticksNumber
     }
 
     valToText (val) {

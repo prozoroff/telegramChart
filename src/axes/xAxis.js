@@ -3,26 +3,22 @@ import { Axis, defaults } from './axis'
 import { animateXTicks } from '../animation'
 
 export class AxisX extends Axis {
-    render (box) {
-        super.render(box)
-        if (this.isHidden) return
-        const metrics = this.metrics = this.tickMetrics(0)
-        this.renderTicks(metrics)
-        return this.ticksGroup
-    }
-
     renderTicks () {
         if (animateXTicks.busy) return
-        this.createNewTicks()
-        this.ticksGroupOut && animateXTicks(
-            this.ticksGroupOut,
-            this.ticksGroup,
-            this.ticksGap * this.direction)
+        !this.ticksGroup && this.createNewTicks()
+        // animateXTicks(
+        //     this.ticksGroupOut,
+        //     this.ticksGroup,
+        //     this.ticksGap * this.direction)
     }
 
     valToText (val) {
         const date = new Date(val)
         return shortMonths[date.getMonth()] + ' ' + date.getDate()
+    }
+
+    getMetrics () {
+        return this.tickMetrics(0)
     }
 
     createNewTicks () {

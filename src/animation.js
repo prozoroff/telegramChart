@@ -67,18 +67,57 @@ export const animateXTicks = (groupOut, groupIn, move) => {
 
         if (xValIn !== null) {
             reqAnimFrame(render)
-            groupOut.setAttribute('transform', 'translate(' + xValOut + ',0)')
             groupIn.setAttribute('transform', 'translate(' + xValIn + ',0)')
-            groupOut.setAttribute('opacity', opacityValOut)
             groupIn.setAttribute('opacity', opacityValIn)
+
+            if (groupOut) {
+                groupOut.setAttribute('transform', 'translate(' + xValOut + ',0)')
+                groupOut.setAttribute('opacity', opacityValOut)
+            }
         }
 
         if (xValIn === null) {
-            groupOut.parentNode.removeChild(groupOut)
+            groupOut && groupOut.parentNode.removeChild(groupOut)
             animateXTicks.busy = false
         }
     }
     animateXTicks.busy = true
+    render()
+}
+
+export const animateYTicks = (groupOut, groupIn, move) => {
+    const stepsCount = 20
+
+    const yAnimIn = linear(stepsCount, move, 0)
+    const yAnimOut = linear(stepsCount, 0, -move)
+    const opacityAnimIn = linear(stepsCount, 0, 1)
+    const opacityAnimOut = linear(stepsCount, 1, 0)
+
+    const render = () => {
+        const yValIn = yAnimIn.val
+        const yValOut = yAnimOut.val
+        const opacityValIn = opacityAnimIn.val
+        const opacityValOut = opacityAnimOut.val
+
+        if (yValIn !== null) {
+            reqAnimFrame(render)
+            groupIn.setAttribute('transform', 'translate(0,' + yValIn + ')')
+            groupIn.setAttribute('opacity', opacityValIn)
+
+            if (groupOut) {
+                groupOut.setAttribute('transform', 'translate(0,' + yValOut + ')')
+                groupOut.setAttribute('opacity', opacityValOut)
+            }
+        }
+
+        if (yValIn === null) {
+            groupOut && groupOut.parentNode.removeChild(groupOut)
+            groupIn.setAttribute('transform', 'translate(0,0)')
+            groupIn.setAttribute('opacity', 1)
+            animateYTicks.busy = false
+        }
+    }
+    animateYTicks.busy = true
     render()
 }
 

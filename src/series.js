@@ -55,8 +55,6 @@ export class Series {
 
         this.cancelAnimation && this.cancelAnimation()
         this.cancelAnimation = animateSeries(this, translateY, scaleY)
-
-        // this.setTransform()
     }
 
     setTransform () {

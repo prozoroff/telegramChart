@@ -28,12 +28,14 @@ export class Chart {
                 }
             )
         })
+        yRange.min = 0
         this.xAxis = new AxisX(this, 'x', xRange, config.xAxisHidden)
         this.yAxis = new AxisY(this, 'y', yRange, config.yAxisHidden)
         this.setRangeY = throttle(yRange => {
             this.series.map(ser => {
                 ser.scalePathY(yRange)
             })
+            this.yAxis.setRange(yRange)
         }, 300)
     }
 
@@ -68,8 +70,8 @@ export class Chart {
         })
 
         this.setRangeY({
-            min: this.yAxis.valToPos(0),
-            max: this.yAxis.valToPos(yRangeVal.max)
+            min: this.yAxis.valToPosInitial(0),
+            max: this.yAxis.valToPosInitial(yRangeVal.max)
         })
 
         this.xAxis.setRange(xRange)

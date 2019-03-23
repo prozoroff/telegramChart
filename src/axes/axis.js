@@ -14,10 +14,7 @@ export class Axis {
         this.isHidden = isHidden
         this.ticks = []
         this.ticksLines = []
-        this.init()
     }
-
-    init () {}
 
     valToPos (val) {
         const range = this.range
@@ -29,6 +26,16 @@ export class Axis {
         return pos * (range.max - range.min) + range.min
     }
 
+    posToValCurrent (pos) {
+        const range = this.range
+        return pos * (range.max - range.min) + range.min
+    }
+
+    valToPosInitial (val) {
+        const range = this.initialRange
+        return (val - range.min) / (range.max - range.min)
+    }
+
     render (box) {
         this.box = {
             x: box.x,
@@ -36,9 +43,15 @@ export class Axis {
             width: box.width,
             height: box.height
         }
+        if (this.isHidden) return
+        const metrics = this.metrics = this.getMetrics()
+        this.renderTicks(metrics)
+        return this.ticksGroup
     }
 
-    renderTicks () { }
+    getMetrics () {}
+
+    renderTicks () {}
 
     setRange (range) {
         const newRange = {
@@ -57,11 +70,6 @@ export class Axis {
 
         this.range = newRange
         this.renderTicks()
-    }
-
-    posToValCurrent (pos) {
-        const range = this.range
-        return pos * (range.max - range.min) + range.min
     }
 
     getGroup () {
