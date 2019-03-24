@@ -1,2 +1,2 @@
 # chart
-Telegram JS Chart
+Telegram Contest JS Chart
