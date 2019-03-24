@@ -11,7 +11,7 @@ switchEl.onclick = function () {
     document.body.style.background = mode === 'day' ? 'white' : '#000018'
     switchEl.innerHTML = 'Switch to ' + capitalizeFirstLetter(prevMode) + ' Mode'
     switchEl.style.color = mode === 'day' ? '#333333' : '#eeeeee'
-    createChart(chartData, mode)
+    createCharts(chartData, mode)
 }
 
 function capitalizeFirstLetter (string) {
