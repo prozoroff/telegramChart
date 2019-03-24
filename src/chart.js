@@ -8,7 +8,7 @@ const defaults = {
 }
 
 export class Chart {
-    constructor (renderer, config) {
+    constructor (renderer, config, mode) {
         const xPoints = config.columns[0].slice(1)
         const xRange = { min: xPoints[0], max: xPoints[xPoints.length - 1] }
         this.renderer = renderer
@@ -26,6 +26,7 @@ export class Chart {
                 }
             )
         })
+        this.mode = mode || 'day'
         this.xAxis = new AxisX(this, 'x', xRange, config.xAxisHidden)
         this.yAxis = new AxisY(this, 'y', this.getYRange(), config.yAxisHidden)
 
@@ -62,14 +63,10 @@ export class Chart {
     render (box) {
         const chartBox = padBox(box, defaults.padding)
 
-        // rendering y axis
         this.yAxis.render(chartBox)
-
-        // rendering x axis
         const xAxisEl = this.xAxis.render(chartBox)
         xAxisEl && (chartBox.height -= xAxisEl.getBBox().height)
 
-        // rendering series
         this.series.map(s => s.render(chartBox))
     }
 
@@ -77,9 +74,7 @@ export class Chart {
         this.series.map(ser => {
             ser.scalePathX(xRange)
         })
-
         this.setRangeY()
-
         this.xAxis.setRange(xRange)
     }
 }

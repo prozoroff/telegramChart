@@ -3,9 +3,10 @@ import { AxisX } from './xAxis'
 import { snap } from '../utils'
 import { animateYTicks } from '../animation'
 
+const ticksNumber = 6
+
 export class AxisY extends Axis {
     renderTicks () {
-        if (animateYTicks.busy) return
         this.createNewTicks()
         this.ticksGap && animateYTicks(
             this.ticksGroupOut,
@@ -28,7 +29,6 @@ export class AxisY extends Axis {
         const xAxisHeight = AxisX.getSize(metrics)
         const yAxisHeight = box.height - xAxisHeight
 
-        // adding background rect
         const axisWidth = defaults.padding * 2 + metrics.width
         this.chart.renderer.rect({
             x: box.x,
@@ -38,8 +38,6 @@ export class AxisY extends Axis {
             fill: 'none'
         }, ticksGroup)
 
-        // adding ticks
-        const ticksNumber = 6 // predefined
         const posStep = 1 / ticksNumber
         const heightStep = yAxisHeight / ticksNumber
         for (let i = 0; i < ticksNumber; i++) {
@@ -50,14 +48,13 @@ export class AxisY extends Axis {
                 {
                     x: box.x + defaults.padding,
                     y: box.y + yAxisHeight - heightStep * i - metrics.descent,
-                    fill: defaults.tickLabelColor
+                    fill: defaults.tickLabelColor[this.chart.mode]
                 },
                 i === 0 ? undefined : ticksGroup
             )
             this.ticks.push(tick)
         }
 
-        // adding grid lines
         for (let i = 0; i < ticksNumber; i++) {
             if (i === 0 && this.ticksGroupOut) continue
             const yCoord = snap(box.y + yAxisHeight - heightStep * i, 0.5)
@@ -65,7 +62,7 @@ export class AxisY extends Axis {
                 {
                     d: 'M' + box.x + ' ' + yCoord + ' h' + box.width,
                     fill: 'none',
-                    stroke: defaults.lineColor
+                    stroke: defaults.lineColor[this.chart.mode]
                 },
                 i === 0 ? undefined : ticksGroup
             )

@@ -8,7 +8,7 @@ const navigatorHeight = 80
 const legendHeight = 60
 
 class tgChart {
-    constructor (parent, config) {
+    constructor (parent, config, mode) {
         this.parent = parent
         this.config = config
         this.width = 600
@@ -22,7 +22,8 @@ class tgChart {
 
         this.chart = new Chart(
             this.renderer,
-            extendCopy(this.config, { strokeWidth: 2 })
+            extendCopy(this.config, { strokeWidth: 2 }),
+            mode
         )
 
         this.navigator = new Navigator(

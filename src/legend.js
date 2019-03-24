@@ -1,14 +1,12 @@
 import { snap } from './utils'
 import { animateLegendIcon } from './animation'
-
-const checkIconPath = 'M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.25 17.292l-4.5-4.364 1.857-1.858 2.643 2.506 5.643-5.784 1.857 1.857-7.5 7.643z'
-const emptyIconPath = 'M12 0c-6.623 0-12 5.377-12 12s5.377 12 12 12 12-5.377 12-12-5.377-12-12-12zm0 22c-5.519 0-10-4.48-10-10 0-5.519 4.481-10 10-10 5.52 0 10 4.481 10 10 0 5.52-4.48 10-10 10z'
+import { checkIconPath, emptyIconPath } from './constants'
 
 const defaults = {
     padding: 15,
     innerPadding: 8,
-    titleColor: '#333333',
-    borderColor: 'lightgray',
+    titleColor: { day: '#333333', night: 'lightgray' },
+    borderColor: { day: 'lightgray', night: 'gray' },
     margin: 10,
     iconSize: 24
 }
@@ -47,7 +45,7 @@ export class Legend {
         const titleX = pad(this.box.x + this.x + titleOffset + defaults.innerPadding)
         const titleY = pad(this.box.y + 18 + defaults.innerPadding)
         this.title = this.chart.renderer.text(series.attrs.name, {
-            fill: defaults.titleColor,
+            fill: defaults.titleColor[this.chart.mode],
             stroke: 'none',
             'font-size': '16px',
             transform: 'translate(' + titleX + ' ' + titleY + ')'
@@ -65,7 +63,7 @@ export class Legend {
                 borderWidth + ' a20,20 0 0 1 -20,-20 a20,20 0 0 1 20,-20 z',
             fill: 'transparent',
             cursor: 'pointer',
-            stroke: defaults.borderColor,
+            stroke: defaults.borderColor[this.chart.mode],
             transform: 'translate(' + borderX + ' ' + borderY + ')'
         })
 

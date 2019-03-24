@@ -63,12 +63,14 @@ export class AxisX extends Axis {
         }
 
         const yCoord = box.y + box.height - metrics.descent - defaults.padding
+        const fill = defaults.tickLabelColor[this.chart.mode]
         for (let i = 0, l = this.ticks.length; i < l; i++) {
             const tick = this.ticks[i]
             const val = tick.val
             const attrs = {
                 x: box.x + this.valToPos(val) * box.width + metrics.width * (0.5 - 2 * i / l),
-                y: yCoord
+                y: yCoord,
+                fill
             }
             const text = this.valToText(val)
             if (tick.el) {

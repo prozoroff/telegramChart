@@ -28,7 +28,6 @@ export const throttle = (func, ms) => {
     let isThrottled = false
     let savedArgs
     let savedThis
-    let timeoutId
 
     const wrapper = function () {
         if (isThrottled) {
@@ -40,7 +39,7 @@ export const throttle = (func, ms) => {
         func.apply(this, arguments)
         isThrottled = true
 
-        timeoutId = setTimeout(function () {
+        setTimeout(function () {
             isThrottled = false
             if (savedArgs) {
                 wrapper.apply(savedThis, savedArgs)

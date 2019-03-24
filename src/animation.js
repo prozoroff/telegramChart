@@ -13,43 +13,43 @@ const linear = (stepsCount, from, to) => ({
     }
 })
 
-const easeOut = (stepsCount, from, to) => ({
-    step: 0,
-    get val () {
-        if (this.step === stepsCount) {
-            return null
-        }
-        let time = this.step++ / stepsCount - 1
-        return (to - from) * (time * time * time + 1) + from
-    }
-})
+// const easeOut = (stepsCount, from, to) => ({
+//     step: 0,
+//     get val () {
+//         if (this.step === stepsCount) {
+//             return null
+//         }
+//         let time = this.step++ / stepsCount - 1
+//         return (to - from) * (time * time * time + 1) + from
+//     }
+// })
 
-const easeIn = (stepsCount, from, to) => ({
-    step: 0,
-    get val () {
-        if (this.step === stepsCount) {
-            return null
-        }
-        let time = this.step++ / stepsCount
-        return (to - from) * time * time * time + from
-    }
-})
+// const easeIn = (stepsCount, from, to) => ({
+//     step: 0,
+//     get val () {
+//         if (this.step === stepsCount) {
+//             return null
+//         }
+//         let time = this.step++ / stepsCount
+//         return (to - from) * time * time * time + from
+//     }
+// })
 
-const easeInOut = (stepsCount, from, to) => ({
-    step: 0,
-    get val () {
-        if (this.step === stepsCount) {
-            return null
-        }
-        let time = 2 * this.step++ / stepsCount
+// const easeInOut = (stepsCount, from, to) => ({
+//     step: 0,
+//     get val () {
+//         if (this.step === stepsCount) {
+//             return null
+//         }
+//         let time = 2 * this.step++ / stepsCount
 
-        if (time < 1) {
-            return (to - from) / 2 * time * time + from
-        }
-        time -= 1
-        return (from - to) / 2 * (time * (time - 2) - 1) + from
-    }
-})
+//         if (time < 1) {
+//             return (to - from) / 2 * time * time + from
+//         }
+//         time -= 1
+//         return (from - to) / 2 * (time * (time - 2) - 1) + from
+//     }
+// })
 
 export const animateLegendIcon = (icon) => {
     const stepsCount = 10

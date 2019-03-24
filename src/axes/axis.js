@@ -1,8 +1,8 @@
 
 export const defaults = {
     padding: 5,
-    lineColor: 'lightgray',
-    tickLabelColor: 'gray'
+    lineColor: { day: 'lightgray', night: 'gray' },
+    tickLabelColor: { day: 'gray', night: 'lightgray' }
 }
 
 export class Axis {
@@ -13,6 +13,7 @@ export class Axis {
         this.range = range
         this.isHidden = isHidden
         this.ticksLines = []
+        this.axisGroup = this.getGroup()
     }
 
     valToPos (val) {
@@ -47,10 +48,6 @@ export class Axis {
         this.renderTicks(metrics)
         return this.ticksGroup
     }
-
-    getMetrics () {}
-
-    renderTicks () {}
 
     setRange (range) {
         const newRange = {
@@ -97,8 +94,8 @@ export class Axis {
 
     getGroup () {
         return this.chart.renderer.g({
-            fill: defaults.tickLabelColor
-        })
+            fill: defaults.tickLabelColor[this.chart.mode]
+        }, this.axisGroup)
     }
 
     tickMetrics (pos) {
