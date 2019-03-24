@@ -44,6 +44,8 @@ export class Navigator {
                 me.setLeft(me.leftX + dx)
                 me.setCentral()
             }
+            event.preventDefault()
+            return false
         }
 
         const rightMoveHandler = event => {
@@ -53,6 +55,8 @@ export class Navigator {
                 me.setRight(me.rightX + dx)
                 me.setCentral()
             }
+            event.preventDefault()
+            return false
         }
 
         const centralMoveHandler = event => {
@@ -63,14 +67,16 @@ export class Navigator {
                 me.setRight(me.rightX + dx)
                 me.setCentral()
             }
+            event.preventDefault()
+            return false
         }
 
         const svgEl = me.renderer.svgEl
 
-        this.leftActive.addEventListener('mousedown', event => {
+        this.leftActive.onmousedown = event => {
             leftMoveHandler.x = event.clientX
             svgEl.addEventListener('mousemove', leftMoveHandler)
-        })
+        }
 
         this.rightActive.addEventListener('mousedown', event => {
             rightMoveHandler.x = event.clientX

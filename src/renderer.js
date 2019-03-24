@@ -35,6 +35,10 @@ export class Renderer {
         return this.create('svg', attrs, parent)
     }
 
+    animate () {
+        return document.createElementNS(xmlns, 'animate')
+    }
+
     path (attrs, parent) {
         return this.create('path', attrs, parent)
     }

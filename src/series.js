@@ -11,6 +11,12 @@ export class Series {
         this.attrs = attrs
         this.translate = [0, 0]
         this.scale = [1, 1]
+        this.visible = true
+    }
+
+    toggle () {
+        this.visible = !this.visible
+        return this.visible
     }
 
     render (box) {

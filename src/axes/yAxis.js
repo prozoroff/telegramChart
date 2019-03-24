@@ -7,7 +7,7 @@ export class AxisY extends Axis {
     renderTicks () {
         if (animateYTicks.busy) return
         this.createNewTicks()
-        animateYTicks(
+        this.ticksGap && animateYTicks(
             this.ticksGroupOut,
             this.ticksGroup,
             this.ticksGap * this.direction * -1)

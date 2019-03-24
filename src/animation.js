@@ -51,6 +51,21 @@ const easeInOut = (stepsCount, from, to) => ({
     }
 })
 
+export const animateLegendIcon = (icon) => {
+    const stepsCount = 10
+    const opacityAnimOut = linear(stepsCount, 0, 1)
+
+    const render = () => {
+        const opacityValOut = opacityAnimOut.val
+
+        if (opacityValOut !== null) {
+            reqAnimFrame(render)
+            icon.setAttribute('opacity', opacityValOut)
+        }
+    }
+    render()
+}
+
 export const animateTickOut = (tick, move) => {
     const stepsCount = 10
     const xAnimOut = linear(stepsCount, 0, move)

@@ -79,7 +79,7 @@ export class AxisX extends Axis {
                     attrs,
                     this.ticksGroup
                 )
-                animateTickIn(tick.el, this.direction * this.metrics.width)
+                this.direction && animateTickIn(tick.el, this.direction * this.metrics.width)
             }
         }
     }
