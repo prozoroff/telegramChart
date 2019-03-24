@@ -4,7 +4,7 @@
 var chartData
 var mode = 'day'
 var switchEl = document.getElementById('switch')
-var chartEl = document.getElementById('chart')
+var switchElements = document.getElementsByClassName('chart')
 switchEl.onclick = function () {
     var prevMode = mode
     mode = mode === 'day' ? 'night' : 'day'
@@ -18,15 +18,18 @@ function capitalizeFirstLetter (string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-function createChart (data, mode) {
+function createCharts (data, mode) {
     chartData = data
-    chartData.width = Math.min(screen.width, 600)
-    chartEl.firstChild && chartEl.removeChild(chartEl.firstChild)
-    new tgc.Chart(chartEl, chartData, mode)
+    for (var i = 0, l = switchElements.length; i < l; i++){
+        var chartEl = switchElements[i]
+        chartData[i].width = Math.min(screen.width, 600)
+        chartEl.firstChild && chartEl.removeChild(chartEl.firstChild)
+        new tgc.Chart(chartEl, chartData[i], mode)
+    }
 }
 
 fetch('chart_data.json').then(res => {
     return res.json()
 }).then(data => {
-    createChart(data[0])
+    createCharts(data)
 })
