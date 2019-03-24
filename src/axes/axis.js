@@ -61,6 +61,9 @@ export class Axis {
         const dMin = newRange.min - this.range.min
         const dMax = newRange.max - this.range.max
 
+        const ratio = this.range.max / newRange.max
+        this.changeRatio = ratio > 1 ? ratio : (1 / ratio)
+
         let direction
         let control
         if (dMin !== 0 && dMax !== 0) {
@@ -74,7 +77,7 @@ export class Axis {
             return
         }
 
-        if (control && control !== 'c' && this.control !== control && this.control) {
+        if (control && this.control !== control && this.control) {
             this.clearTicks()
         }
 

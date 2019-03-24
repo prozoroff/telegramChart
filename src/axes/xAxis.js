@@ -1,5 +1,6 @@
 import { shortMonths } from '../constants'
 import { Axis, defaults } from './axis'
+import { animateTickOut, animateTickIn } from '../animation'
 
 const ticksNumber = 6
 
@@ -78,6 +79,7 @@ export class AxisX extends Axis {
                     attrs,
                     this.ticksGroup
                 )
+                animateTickIn(tick.el, this.direction * this.metrics.width)
             }
         }
     }
@@ -87,7 +89,7 @@ export class AxisX extends Axis {
         const result = []
 
         const inDelta = d => (d < delta * 1.2 && d > delta / 1.2)
-        const remove = el => el.parentNode.removeChild(el)
+        const remove = el => animateTickOut(el, this.direction * this.metrics.width * -1)
 
         if ((this.direction < 0 && this.control === 'c') || this.control === 'r') {
             result.push(ticks[0])

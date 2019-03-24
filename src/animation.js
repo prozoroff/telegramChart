@@ -51,37 +51,43 @@ const easeInOut = (stepsCount, from, to) => ({
     }
 })
 
-export const animateXTicks = (groupOut, groupIn, move) => {
-    const stepsCount = 20
-
-    const xAnimIn = linear(stepsCount, -move, 0)
+export const animateTickOut = (tick, move) => {
+    const stepsCount = 10
     const xAnimOut = linear(stepsCount, 0, move)
-    const opacityAnimIn = linear(stepsCount, 0, 1)
-    const opacityAnimOut = linear(stepsCount, 1, 0)
+    const opacityAnimOut = linear(stepsCount, 0.5, 0)
 
     const render = () => {
-        const xValIn = xAnimIn.val
         const xValOut = xAnimOut.val
-        const opacityValIn = opacityAnimIn.val
         const opacityValOut = opacityAnimOut.val
 
-        if (xValIn !== null) {
+        if (xValOut !== null) {
             reqAnimFrame(render)
-            groupIn.setAttribute('transform', 'translate(' + xValIn + ',0)')
-            groupIn.setAttribute('opacity', opacityValIn)
-
-            if (groupOut) {
-                groupOut.setAttribute('transform', 'translate(' + xValOut + ',0)')
-                groupOut.setAttribute('opacity', opacityValOut)
-            }
+            tick.setAttribute('transform', 'translate(' + xValOut + ',0)')
+            tick.setAttribute('opacity', opacityValOut)
         }
 
-        if (xValIn === null) {
-            groupOut && groupOut.parentNode.removeChild(groupOut)
-            animateXTicks.busy = false
+        if (xValOut === null) {
+            tick.parentNode.removeChild(tick)
         }
     }
-    animateXTicks.busy = true
+    render()
+}
+
+export const animateTickIn = (tick, move) => {
+    const stepsCount = 10
+    const xAnimOut = linear(stepsCount, move, 0)
+    const opacityAnimOut = linear(stepsCount, 0, 1)
+
+    const render = () => {
+        const xValOut = xAnimOut.val
+        const opacityValOut = opacityAnimOut.val
+
+        if (xValOut !== null) {
+            reqAnimFrame(render)
+            tick.setAttribute('transform', 'translate(' + xValOut + ',0)')
+            tick.setAttribute('opacity', opacityValOut)
+        }
+    }
     render()
 }
 
