@@ -102,9 +102,8 @@ export const animateTickIn = (tick, move) => {
             tick.setAttribute('transform', 'translate(' + move + ',0)')
             tick.setAttribute('opacity', opacityValOut)
         }
-        
+
         if (xValOut === null) {
-            tick.setAttribute('transform', 'translate(0,0)')
             tick.setAttribute('opacity', 1)
         }
     }
