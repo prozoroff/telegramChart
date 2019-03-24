@@ -99,7 +99,7 @@ export const animateTickIn = (tick, move) => {
 
         if (xValOut !== null) {
             reqAnimFrame(render)
-            tick.setAttribute('transform', 'translate(' + move + ',0)')
+            tick.setAttribute('transform', 'translate(' + xValOut + ',0)')
             tick.setAttribute('opacity', opacityValOut)
         }
 

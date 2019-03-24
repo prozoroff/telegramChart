@@ -7,6 +7,7 @@ const ticksNumber = 6
 
 export class AxisY extends Axis {
     renderTicks () {
+        if (animateYTicks.busy) return
         this.createNewTicks()
         this.ticksGap && animateYTicks(
             this.ticksGroupOut,
@@ -38,11 +39,15 @@ export class AxisY extends Axis {
             fill: 'none'
         }, ticksGroup)
 
-        const posStep = 1 / ticksNumber
+        let valStep = this.range.max / ticksNumber
+        const valStepPower = Math.round(valStep).toString().length - 1
+        const factor = Math.pow(10, valStepPower)
+        valStep = Math.round(valStep / factor) * factor
+
         const heightStep = yAxisHeight / ticksNumber
         for (let i = 0; i < ticksNumber; i++) {
             if (i === 0 && this.ticksGroupOut) continue
-            const value = this.posToValCurrent(posStep * i)
+            const value = valStep * i
             const tick = this.chart.renderer.text(
                 this.valToText(value),
                 {
