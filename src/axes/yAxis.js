@@ -10,7 +10,7 @@ export class AxisY extends Axis {
         animateYTicks(
             this.ticksGroupOut,
             this.ticksGroup,
-            this.ticksGap * this.direction)
+            this.ticksGap * this.direction * -1)
     }
 
     getMetrics () {

@@ -2,6 +2,10 @@ import { Chart } from './chart'
 import { Renderer } from './renderer'
 import { extendCopy } from './utils'
 import { Navigator } from './navigator'
+import { Legend } from './legend'
+
+const navigatorHeight = 80
+const legendHeight = 60
 
 class tgChart {
     constructor (parent, config) {
@@ -9,7 +13,6 @@ class tgChart {
         this.config = config
         this.width = 600
         this.height = 400
-        this.navigatorHeight = 80
         this.renderer = new Renderer(this.parent, {
             width: this.width,
             height: this.height,
@@ -29,6 +32,8 @@ class tgChart {
                 this.chart.setRange(range)
             }
         )
+
+        this.legend = new Legend(this.chart)
     }
 
     render () {
@@ -36,14 +41,21 @@ class tgChart {
             x: 0,
             y: 0,
             width: this.width,
-            height: this.height - this.navigatorHeight
+            height: this.height - navigatorHeight - legendHeight
         })
 
         this.navigator.render({
             x: 0,
-            y: this.height - this.navigatorHeight,
+            y: this.height - navigatorHeight - legendHeight,
             width: this.width,
-            height: this.navigatorHeight
+            height: navigatorHeight
+        })
+
+        this.legend.render({
+            x: 0,
+            y: this.height - legendHeight,
+            width: this.width,
+            height: legendHeight
         })
     }
 }
