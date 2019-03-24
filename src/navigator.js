@@ -31,7 +31,7 @@ export class Navigator {
         me.box = box
 
         const leftX = this.leftX = box.x + box.width * 0.5
-        const rightX = this.rightX = box.x + box.width * 0.7
+        const rightX = this.rightX = box.x + box.width * 1
 
         me.setCentral()
         me.setLeft(leftX)

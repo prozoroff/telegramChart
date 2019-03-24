@@ -22,6 +22,8 @@ export class AxisY extends Axis {
         const metrics = this.metrics
         this.ticksGroupOut = this.ticksGroup
 
+        this.ticks = this.ticks || []
+
         const ticksGroup = this.ticksGroup = this.getGroup()
         const xAxisHeight = AxisX.getSize(metrics)
         const yAxisHeight = box.height - xAxisHeight
@@ -76,25 +78,6 @@ export class AxisY extends Axis {
         return Math.round(val).toString()
     }
 
-    setRange (range) {
-        const newRange = {
-            min: this.posToVal(range.min),
-            max: this.posToVal(range.max)
-        }
-
-        const dMin = newRange.min - this.range.min
-        const dMax = newRange.max - this.range.max
-
-        const ratio = this.range.max / newRange.max
-        this.changeRatio = ratio > 1 ? ratio : (1 / ratio)
-
-        if (dMin !== 0 || dMax !== 0) {
-            this.direction = (dMin > 0 || dMax > 0) ? -1 : 1
-        } else {
-            this.direction = 0
-        }
-
-        this.range = newRange
-        this.renderTicks()
+    removeTicks () {
     }
 }

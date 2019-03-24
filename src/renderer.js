@@ -15,12 +15,16 @@ export class Renderer {
     create (tag, attrs, parent) {
         const el = document.createElementNS(xmlns, tag)
         if (attrs) {
-            for (let key in attrs) {
-                el.setAttribute(key, attrs[key])
-            }
+            this.attr(el, attrs)
         }
         (parent || this.svgEl || this.parent).appendChild(el)
         return el
+    }
+
+    attr (el, attrs) {
+        for (let key in attrs) {
+            el.setAttribute(key, attrs[key])
+        }
     }
 
     svg (attrs, parent) {

@@ -12,7 +12,6 @@ export class Axis {
         this.initialRange = range
         this.range = range
         this.isHidden = isHidden
-        this.ticks = []
         this.ticksLines = []
     }
 
@@ -53,7 +52,33 @@ export class Axis {
 
     renderTicks () {}
 
-    setRange (range) {}
+    setRange (range) {
+        const newRange = {
+            min: this.posToVal(range.min),
+            max: this.posToVal(range.max)
+        }
+
+        const dMin = newRange.min - this.range.min
+        const dMax = newRange.max - this.range.max
+
+        const ratio = this.range.max / newRange.max
+        this.changeRatio = ratio > 1 ? ratio : (1 / ratio)
+
+        if (dMin !== 0 || dMax !== 0) {
+            this.direction = dMax === 0
+                ? 'r'
+                : (dMin === 0
+                    ? 'l'
+                    : dMin > 0
+                        ? 'cl'
+                        : 'cr')
+        } else {
+            this.direction = null
+        }
+
+        this.range = newRange
+        this.renderTicks()
+    }
 
     getGroup () {
         return this.chart.renderer.g({
