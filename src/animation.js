@@ -150,6 +150,13 @@ export const animateSeries = (series, toY, toScale) => {
     const yAnim = linear(stepsCount, fromY, toY)
     const scaleAnim = linear(stepsCount, fromScale, toScale)
 
+    let opacityAnimIn
+    if (series.toFade) {
+        opacityAnimIn = linear(stepsCount,
+            series.visible ? 0 : 1,
+            series.visible ? 1 : 0)
+    }
+
     let stop
     const cancel = () => (stop = true)
 
@@ -161,11 +168,17 @@ export const animateSeries = (series, toY, toScale) => {
             reqAnimFrame(render)
             series.translate[1] = yVal
             series.scale[1] = scaleVal
+
+            if (series.toFade) {
+                series.opacity = opacityAnimIn.val
+            }
         }
 
         if (yVal === null) {
             series.translate[1] = toY
             series.scale[1] = toScale
+            series.opacity = series.visible ? 1 : 0
+            series.toFade = false
         }
 
         series.setTransform()

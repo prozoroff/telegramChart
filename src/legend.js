@@ -26,7 +26,7 @@ export class Legend {
 
         this.chart.series.map(ser => {
             this.renderLegendItem(ser, () => {
-
+                this.chart.refreshSeries()
             })
         })
     }

@@ -39,6 +39,19 @@ export class Chart {
         }, 300)
     }
 
+    refreshSeries () {
+        const yRange = { min: Infinity, max: -Infinity }
+        this.series.map(ser => {
+            ser.visible && fullRange(ser.yPoints, yRange)
+        })
+        if (yRange.max !== -Infinity) {
+            this.setRangeY({
+                min: 0,
+                max: this.yAxis.valToPosInitial(yRange.max)
+            })
+        }
+    }
+
     render (box) {
         const chartBox = padBox(box, defaults.padding)
 
@@ -57,13 +70,19 @@ export class Chart {
         const yRangeVal = { min: Infinity, max: -Infinity }
 
         this.series.map(ser => {
-            const yRangeSer = ser.getYRange({
-                min: this.xAxis.posToVal(xRange.min),
-                max: this.xAxis.posToVal(xRange.max)
-            })
-            yRangeVal.min > yRangeSer.min && (yRangeVal.min = yRangeSer.min)
-            yRangeVal.max < yRangeSer.max && (yRangeVal.max = yRangeSer.max)
+            if (ser.visible) {
+                const yRangeSer = ser.getYRange({
+                    min: this.xAxis.posToVal(xRange.min),
+                    max: this.xAxis.posToVal(xRange.max)
+                })
+                yRangeVal.min > yRangeSer.min && (yRangeVal.min = yRangeSer.min)
+                yRangeVal.max < yRangeSer.max && (yRangeVal.max = yRangeSer.max)
+            }
         })
+
+        if (yRangeVal.max === -Infinity) {
+            return
+        }
 
         this.series.map(ser => {
             ser.scalePathX(xRange)

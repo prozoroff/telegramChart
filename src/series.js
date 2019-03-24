@@ -7,15 +7,18 @@ export class Series {
         for (let i = 0, l = xPoints.length; i < l; i++) {
             this.points.push({ x: xPoints[i], y: yPoints[i] })
         }
+        this.yPoints = yPoints
         this.name = name
         this.attrs = attrs
         this.translate = [0, 0]
         this.scale = [1, 1]
+        this.opacity = 1
         this.visible = true
     }
 
     toggle () {
         this.visible = !this.visible
+        this.toFade = true
         return this.visible
     }
 
@@ -68,6 +71,7 @@ export class Series {
         const translateStr = 'translate(' + this.translate.join(' ') + ')'
 
         this.path.setAttribute('transform', scaleStr + ' ' + translateStr)
+        this.path.setAttribute('opacity', this.opacity)
     }
 
     getYRange (xRange) {
