@@ -1,8 +1,8 @@
 
 export const defaults = {
     padding: 5,
-    lineColor: { day: 'lightgray', night: 'gray' },
-    tickLabelColor: { day: 'gray', night: 'lightgray' }
+    lineColor: { 'day': 'lightgray', 'night': 'gray' },
+    tickLabelColor: { 'day': 'gray', 'night': 'lightgray' }
 }
 
 export class Axis {

@@ -11,8 +11,8 @@ class tgChart {
     constructor (parent, config, mode) {
         this.parent = parent
         this.config = config
-        this.width = 600
-        this.height = 400
+        this.width = config.width || 600
+        this.height = config.height || 400
         this.renderer = new Renderer(this.parent, {
             width: this.width,
             height: this.height,

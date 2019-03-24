@@ -5,8 +5,8 @@ import { checkIconPath, emptyIconPath } from './constants'
 const defaults = {
     padding: 15,
     innerPadding: 8,
-    titleColor: { day: '#333333', night: 'lightgray' },
-    borderColor: { day: 'lightgray', night: 'gray' },
+    titleColor: { 'day': '#333333', 'night': 'lightgray' },
+    borderColor: { 'day': 'lightgray', 'night': 'gray' },
     margin: 10,
     iconSize: 24
 }
