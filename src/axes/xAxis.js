@@ -34,21 +34,20 @@ export class AxisX extends Axis {
             }, this.ticksGroup)
         } else {
             const filteredTicks = this.filterTicks(this.ticks, delta, inRange)
-
             if (filteredTicks.length) {
                 let tickIndex = filteredTicks.length
                 const valDelta = filteredTicks[1]
                     ? filteredTicks[1].val - filteredTicks[0].val
                     : delta
-        
-                if (this.direction === 'r') {
+
+                if ((this.direction < 0 && this.control === 'c') || this.control === 'l') {
                     let val = filteredTicks[0].val - valDelta
                     while (tickIndex < ticksNumber) {
                         filteredTicks.unshift({ val })
                         tickIndex++
                         val -= valDelta
                     }
-                } else if (this.direction === 'l') {
+                } else if ((this.direction > 0 && this.control === 'c') || this.control === 'r') {
                     let val = filteredTicks[filteredTicks.length - 1].val + valDelta
                     while (tickIndex < ticksNumber) {
                         filteredTicks.push({ val })
@@ -66,17 +65,17 @@ export class AxisX extends Axis {
         for (let i = 0, l = this.ticks.length; i < l; i++) {
             const tick = this.ticks[i]
             const val = tick.val
-            const coords = {
+            const attrs = {
                 x: box.x + this.valToPos(val) * box.width + metrics.width * (0.5 - 2 * i / l),
                 y: yCoord
             }
             const text = this.valToText(val)
             if (tick.el) {
-                this.chart.renderer.attr(tick.el, coords)
+                this.chart.renderer.attr(tick.el, attrs)
             } else {
                 tick.el = this.chart.renderer.text(
                     text,
-                    coords,
+                    attrs,
                     this.ticksGroup
                 )
             }
@@ -84,38 +83,27 @@ export class AxisX extends Axis {
     }
 
     filterTicks (ticks, delta, inRange) {
+        if (!ticks.length) return ticks
         const result = []
-        const inDelta = d => d < delta * 1.2 && d > delta / 1.2
-        const inDeltaRight = d => d < delta * 1.2
+
+        const inDelta = d => (d < delta * 1.2 && d > delta / 1.2)
         const remove = el => el.parentNode.removeChild(el)
 
-        if (this.direction === 'l') {
-            const firstTick = ticks[0]
-            if (inDeltaRight(firstTick.val - this.range.min)) {
-                result.push(firstTick)
-            } else {
-                remove(firstTick.el)
-            }
-
+        if ((this.direction < 0 && this.control === 'c') || this.control === 'r') {
+            result.push(ticks[0])
             for (let i = 1; i < ticks.length; i++) {
                 const tick = ticks[i]
-                if (result.length && inRange(tick.val) && inDelta(tick.val - ticks[i - 1].val)) {
+                if (inRange(tick.val) && inDelta(tick.val - ticks[i - 1].val)) {
                     result.push(tick)
                 } else {
                     remove(tick.el)
                 }
             }
-        } else if (this.direction === 'r') {
-            const lastTick = ticks[ticks.length - 1]
-            if (inDeltaRight(this.range.max - lastTick.val)) {
-                result.push(lastTick)
-            } else {
-                remove(lastTick.el)
-            }
-
+        } else if ((this.direction > 0 && this.control === 'c') || this.control === 'l') {
+            result.push(ticks[ticks.length - 1])
             for (let i = ticks.length - 2; i >= 0; i--) {
                 const tick = ticks[i]
-                if (result.length && inRange(tick.val) && inDelta(ticks[i + 1].val - tick.val)) {
+                if (inRange(tick.val) && inDelta(ticks[i + 1].val - tick.val)) {
                     result.unshift(tick)
                 } else {
                     remove(tick.el)

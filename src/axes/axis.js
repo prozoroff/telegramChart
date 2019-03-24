@@ -61,23 +61,35 @@ export class Axis {
         const dMin = newRange.min - this.range.min
         const dMax = newRange.max - this.range.max
 
-        const ratio = this.range.max / newRange.max
-        this.changeRatio = ratio > 1 ? ratio : (1 / ratio)
-
-        if (dMin !== 0 || dMax !== 0) {
-            this.direction = dMax === 0
-                ? 'r'
-                : (dMin === 0
-                    ? 'l'
-                    : dMin > 0
-                        ? 'cl'
-                        : 'cr')
+        let direction
+        let control
+        if (dMin !== 0 && dMax !== 0) {
+            direction = dMax > 0 ? 1 : -1
+            control = 'c'
+        } else if (dMin !== 0 || dMax !== 0) {
+            const change = dMax || dMin
+            direction = change > 0 ? 1 : -1
+            control = dMax ? 'r' : 'l'
         } else {
-            this.direction = null
+            return
         }
+
+        if (control && control !== 'c' && this.control !== control && this.control) {
+            this.clearTicks()
+        }
+
+        this.direction = direction
+        this.control = control
 
         this.range = newRange
         this.renderTicks()
+    }
+
+    clearTicks () {
+        this.ticks.map(tick => {
+            tick.el && tick.el.parentNode.removeChild(tick.el)
+        })
+        this.ticks = []
     }
 
     getGroup () {

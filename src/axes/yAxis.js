@@ -5,12 +5,13 @@ import { animateYTicks } from '../animation'
 
 export class AxisY extends Axis {
     renderTicks () {
+        this.ticks = []
         // if (animateYTicks.busy) return
-        this.createNewTicks()
-        animateYTicks(
-            this.ticksGroupOut,
-            this.ticksGroup,
-            this.ticksGap * this.direction)
+        // this.createNewTicks()
+        // animateYTicks(
+        //     this.ticksGroupOut,
+        //     this.ticksGroup,
+        //     this.ticksGap * this.direction)
     }
 
     getMetrics () {
@@ -76,8 +77,5 @@ export class AxisY extends Axis {
 
     valToText (val) {
         return Math.round(val).toString()
-    }
-
-    removeTicks () {
     }
 }

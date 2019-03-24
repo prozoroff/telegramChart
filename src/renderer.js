@@ -10,6 +10,10 @@ export class Renderer {
             height: attrs.height,
             fill: 'transparent'
         })
+        this.svgEl.style['-webkit-user-select'] = 'none'
+        this.svgEl.style['-moz-user-select'] = 'none'
+        this.svgEl.style['-ms-user-select'] = 'none'
+        this.svgEl.style['user-select'] = 'none'
     }
 
     create (tag, attrs, parent) {
