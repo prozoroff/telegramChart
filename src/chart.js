@@ -9,10 +9,10 @@ const defaults = {
 
 export class Chart {
     constructor (renderer, config, mode) {
-        const xPoints = config.columns[0].slice(1)
+        const xPoints = config['columns'][0].slice(1)
         const xRange = { min: xPoints[0], max: xPoints[xPoints.length - 1] }
         this.renderer = renderer
-        this.series = config.columns.slice(1).map(obj => {
+        this.series = config['columns'].slice(1).map(obj => {
             const key = obj[0]
             const yPoints = obj.slice(1)
             return new Series(
@@ -20,15 +20,15 @@ export class Chart {
                 xPoints,
                 yPoints,
                 {
-                    name: config.names[key],
-                    color: config.colors[key],
-                    strokeWidth: config.strokeWidth
+                    name: config['names'][key],
+                    color: config['colors'][key],
+                    strokeWidth: config['strokeWidth']
                 }
             )
         })
         this.mode = mode || 'day'
-        this.xAxis = new AxisX(this, 'x', xRange, config.xAxisHidden)
-        this.yAxis = new AxisY(this, 'y', this.getYRange(), config.yAxisHidden)
+        this.xAxis = new AxisX(this, 'x', xRange, config['xAxisHidden'])
+        this.yAxis = new AxisY(this, 'y', this.getYRange(), config['yAxisHidden'])
 
         this.setRangeY = throttle(() => {
             const yRangeVal = this.getYRange()
@@ -65,7 +65,7 @@ export class Chart {
 
         this.yAxis.render(chartBox)
         const xAxisEl = this.xAxis.render(chartBox)
-        xAxisEl && (chartBox.height -= xAxisEl.getBBox().height)
+        xAxisEl && (chartBox.height -= xAxisEl['getBBox']().height)
 
         this.series.map(s => s.render(chartBox))
     }

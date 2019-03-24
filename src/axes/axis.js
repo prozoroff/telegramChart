@@ -106,7 +106,7 @@ export class Axis {
                 y: 0
             }
         )
-        const bbox = firstTick.getBBox()
+        const bbox = firstTick['getBBox']()
         firstTick.parentNode.removeChild(firstTick)
         return {
             ascent: -bbox.y,

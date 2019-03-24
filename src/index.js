@@ -22,22 +22,20 @@ class tgChart {
 
         this.chart = new Chart(
             this.renderer,
-            extendCopy(this.config, { strokeWidth: 2 }),
+            extendCopy(this.config, { 'strokeWidth': 2 }),
             mode
         )
 
         this.navigator = new Navigator(
             this.renderer,
-            extendCopy(this.config, { strokeWidth: 1, xAxisHidden: true, yAxisHidden: true }),
+            extendCopy(this.config, { 'strokeWidth': 1, 'xAxisHidden': true, 'yAxisHidden': true }),
             range => {
                 this.chart.setRange(range)
             }
         )
 
         this.legend = new Legend(this.chart)
-    }
 
-    render () {
         this.chart.render({
             x: 0,
             y: 0,
@@ -61,4 +59,4 @@ class tgChart {
     }
 }
 
-window.tgc = { Chart: tgChart }
+window['tgc'] = { 'Chart': tgChart }

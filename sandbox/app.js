@@ -4,5 +4,5 @@
 fetch('chart_data.json').then(res => {
     return res.json()
 }).then(data => {
-    new tgc.Chart(document.getElementById('chart'), data[0]).render()
+    tgc.Chart(document.getElementById('chart'), data[0])
 })

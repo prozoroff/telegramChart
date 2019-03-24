@@ -51,7 +51,7 @@ export class Legend {
             transform: 'translate(' + titleX + ' ' + titleY + ')'
         })
 
-        const titleWidth = this.title.getBBox().width
+        const titleWidth = this.title['getBBox']().width
 
         const radius = 20
         const borderWidth = titleWidth + titleOffset - radius

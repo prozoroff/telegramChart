@@ -8,7 +8,6 @@ export class Series {
             this.points.push({ x: xPoints[i], y: yPoints[i] })
         }
         this.yPoints = yPoints
-        this.name = name
         this.attrs = attrs
         this.translate = [0, 0]
         this.scale = [1, 1]

@@ -14,7 +14,8 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "eslint-plugin-standard": "^4.0.0",
+    "webpack-closure-compiler": "^2.1.6"
   },
   "scripts": {
     "server": "browser-sync start --server --no-notify --no-ui --files *",
