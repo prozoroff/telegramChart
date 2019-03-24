@@ -11,12 +11,10 @@ export class Chart {
     constructor (renderer, config) {
         const xPoints = config.columns[0].slice(1)
         const xRange = { min: xPoints[0], max: xPoints[xPoints.length - 1] }
-        const yRange = { min: Infinity, max: -Infinity }
         this.renderer = renderer
         this.series = config.columns.slice(1).map(obj => {
             const key = obj[0]
             const yPoints = obj.slice(1)
-            fullRange(yPoints, yRange)
             return new Series(
                 this,
                 xPoints,
@@ -28,10 +26,15 @@ export class Chart {
                 }
             )
         })
-        yRange.min = 0
         this.xAxis = new AxisX(this, 'x', xRange, config.xAxisHidden)
-        this.yAxis = new AxisY(this, 'y', yRange, config.yAxisHidden)
-        this.setRangeY = throttle(yRange => {
+        this.yAxis = new AxisY(this, 'y', this.getYRange(), config.yAxisHidden)
+
+        this.setRangeY = throttle(() => {
+            const yRangeVal = this.getYRange()
+            const yRange = {
+                min: this.yAxis.valToPosInitial(yRangeVal.min),
+                max: this.yAxis.valToPosInitial(yRangeVal.max)
+            }
             this.series.map(ser => {
                 ser.scalePathY(yRange)
             })
@@ -39,16 +42,20 @@ export class Chart {
         }, 300)
     }
 
-    refreshSeries () {
-        const yRange = { min: Infinity, max: -Infinity }
-        this.series.map(ser => {
-            ser.visible && fullRange(ser.yPoints, yRange)
+    getYRange () {
+        const yRangeVal = { min: Infinity, max: -Infinity }
+
+        this.series.map((ser, i) => {
+            if (ser.visible || i === this.series.length - 1) {
+                const yRangeSer = ser.getYRange(this.xAxis.range)
+                yRangeVal.min > yRangeSer.min && (yRangeVal.min = yRangeSer.min)
+                yRangeVal.max < yRangeSer.max && (yRangeVal.max = yRangeSer.max)
+            }
         })
-        if (yRange.max !== -Infinity) {
-            this.setRangeY({
-                min: 0,
-                max: this.yAxis.valToPosInitial(yRange.max)
-            })
+
+        return {
+            min: 0,
+            max: yRangeVal.max
         }
     }
 
@@ -67,40 +74,12 @@ export class Chart {
     }
 
     setRange (xRange) {
-        const yRangeVal = { min: Infinity, max: -Infinity }
-
-        this.series.map(ser => {
-            if (ser.visible) {
-                const yRangeSer = ser.getYRange({
-                    min: this.xAxis.posToVal(xRange.min),
-                    max: this.xAxis.posToVal(xRange.max)
-                })
-                yRangeVal.min > yRangeSer.min && (yRangeVal.min = yRangeSer.min)
-                yRangeVal.max < yRangeSer.max && (yRangeVal.max = yRangeSer.max)
-            }
-        })
-
-        if (yRangeVal.max === -Infinity) {
-            return
-        }
-
         this.series.map(ser => {
             ser.scalePathX(xRange)
         })
 
-        this.setRangeY({
-            min: this.yAxis.valToPosInitial(0),
-            max: this.yAxis.valToPosInitial(yRangeVal.max)
-        })
+        this.setRangeY()
 
         this.xAxis.setRange(xRange)
-    }
-}
-
-function fullRange (array, range) {
-    for (let i = 0, l = array.length; i < l; i++) {
-        const val = array[i]
-        val < range.min && (range.min = val)
-        val > range.max && (range.max = val)
     }
 }
